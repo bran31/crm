@@ -1,7 +1,7 @@
 {% extends 'accounts/main.html' %}
 {% block content %}
 {% include 'accounts/status.html' %}
-
+{% csrf_token %}
 <h3>User Profile</h3>
 
 {% endblock content %}

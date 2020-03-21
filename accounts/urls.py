@@ -6,7 +6,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('products/', views.products, name='products'),
     path('customer/<str:pk>/', views.customer, name='customer'),
-    path('user/', views.userPage, name='userPage'),
+    path('user/', views.userPage, name='user-page'),
 
 #------------------------------------------------------------------------------
 #Order Info

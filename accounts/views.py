@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from django.forms import inlineformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
 from django.contrib.auth import authenticate, login, logout
+
 
 from django.contrib import messages
 
@@ -16,7 +18,7 @@ from .decorators import *
 
 # Create your views here.
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['Admin'])
+@admin_only
 def home(request):
     orders = Order.objects.all()
     customers = Customer.objects.all()
@@ -57,7 +59,7 @@ def userPage(request):
     context = {}
     return render(request, 'accounts/user.html', context)
 
-
+#--------------------------------------------------------------------------------------------------------
 
 @login_required(login_url='login')
 def createOrder(request, pk):
@@ -103,6 +105,7 @@ def deleteOrder(request, pk):
     context = {'item': order}
     return render(request, 'accounts/delete.html', context)
 
+#--------------------------------------------------------------------------------------------------------
 
 @login_required(login_url='login')
 def createCustomer(request):
@@ -123,9 +126,11 @@ def registerPage(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            form.save()
-            user = form.cleaned_data.get('username')
-            messages.success(request, 'Account was created for ' + user)
+            user = form.save()
+            group = Group.objects.get(name='Customer')
+            user.groups.add(group)
+            username = form.cleaned_data.get('username')
+            messages.success(request, 'Account was created for ' + username)
 
             return redirect('login')
 
@@ -134,6 +139,7 @@ def registerPage(request):
     return render(request, 'accounts/register.html', context)
 
 
+#--------------------------------------------------------------------------------------------------------
 
 @unauthenticated_user
 def loginPage(request):
