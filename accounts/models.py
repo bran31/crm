@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 # Create your models here.
 class Customer(models.Model):
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
@@ -10,7 +11,7 @@ class Customer(models.Model):
     date_created = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 class Tag(models.Model):
     name = models.CharField(max_length=200, null=True)
